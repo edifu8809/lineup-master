@@ -1,0 +1,32 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "215666" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 85,
+        "name": "Paris Saint Germain",
+        "logo": "https://media.api-sports.io/football/teams/85.png"
+      },
+      "formation": "4-3-3",
+      "startXI": [
+        { "player": { "id": 401, "name": "G. Donnarumma", "number": 99, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/674.png" } },
+        { "player": { "id": 402, "name": "A. Hakimi", "number": 2, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/874.png" } },
+        { "player": { "id": 403, "name": "M. Skriniar", "number": 37, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/2975.png" } },
+        { "player": { "id": 404, "name": "Marquinhos", "number": 5, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/322.png" } },
+        { "player": { "id": 405, "name": "Nuno Mendes", "number": 25, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/140083.png" } },
+        { "player": { "id": 406, "name": "M. Ugarte", "number": 4, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/191308.png" } },
+        { "player": { "id": 407, "name": "Vitinha", "number": 17, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/33799.png" } },
+        { "player": { "id": 408, "name": "W. Zaire-Emery", "number": 33, "pos": "M", "grid": "3:3", "photo": "https://media.api-sports.io/football/players/337905.png" } },
+        { "player": { "id": 409, "name": "O. Dembele", "number": 10, "pos": "F", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/627.png" } },
+        { "player": { "id": 410, "name": "G. Ramos", "number": 9, "pos": "F", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/35690.png" } },
+        { "player": { "id": 411, "name": "B. Barcola", "number": 29, "pos": "F", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/191307.png" } }
+      ],
+      "substitutes": [],
+      "coach": { "id": 5, "name": "Luis Enrique", "photo": "https://media.api-sports.io/football/coachs/1307.png" }
+    }
+  ]
+}

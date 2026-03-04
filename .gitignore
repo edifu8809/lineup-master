@@ -141,3 +141,6 @@ vite.config.ts.timestamp-*
 # Expo
 .expo/
 expo-env.d.ts
+# Local env files
+.env
+.env.local

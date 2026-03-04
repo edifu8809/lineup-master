@@ -1,0 +1,36 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "101" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 451,
+        "name": "Boca Juniors",
+        "logo": "https://media.api-sports.io/football/teams/451.png"
+      },
+      "formation": "4-3-3",
+      "startXI": [
+        { "player": { "id": 779, "name": "S. Romero", "number": 1, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/779.png" } },
+        { "player": { "id": 221480, "name": "L. Blondel", "number": 42, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/221480.png" } },
+        { "player": { "id": 59548, "name": "M. Rojo", "number": 6, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/59548.png" } },
+        { "player": { "id": 18794, "name": "C. Lema", "number": 2, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/18794.png" } },
+        { "player": { "id": 42706, "name": "F. Fabra", "number": 18, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/42706.png" } },
+        { "player": { "id": 16292, "name": "K. Zenon", "number": 22, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/16292.png" } },
+        { "player": { "id": 29584, "name": "G. Fernandez", "number": 5, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/29584.png" } },
+        { "player": { "id": 413388, "name": "C. Medina", "number": 36, "pos": "M", "grid": "3:3", "photo": "https://media.api-sports.io/football/players/413388.png" } },
+        { "player": { "id": 1836, "name": "E. Cavani", "number": 10, "pos": "F", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/1836.png" } },
+        { "player": { "id": 18574, "name": "M. Merentiel", "number": 16, "pos": "F", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/18574.png" } },
+        { "player": { "id": 156833, "name": "E. Zeballos", "number": 7, "pos": "F", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/156833.png" } }
+      ],
+      "substitutes": [
+        { "player": { "id": 38943, "name": "L. Advincula", "number": 17, "pos": "D", "grid": null, "photo": "https://media.api-sports.io/football/players/38943.png" } },
+        { "player": { "id": 13634, "name": "N. Figal", "number": 4, "pos": "D", "grid": null, "photo": "https://media.api-sports.io/football/players/13634.png" } },
+        { "player": { "id": 167860, "name": "J. Saralegui", "number": 47, "pos": "M", "grid": null, "photo": "https://media.api-sports.io/football/players/167860.png" } }
+      ],
+      "coach": { "id": 24363, "name": "D. Martinez", "photo": "https://media.api-sports.io/football/coachs/24363.png" }
+    }
+  ]
+}

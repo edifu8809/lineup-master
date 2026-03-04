@@ -1,0 +1,36 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "100" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 435,
+        "name": "River Plate",
+        "logo": "https://media.api-sports.io/football/teams/435.png"
+      },
+      "formation": "4-3-3",
+      "startXI": [
+        { "player": { "id": 15758, "name": "F. Armani", "number": 1, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/15758.png" } },
+        { "player": { "id": 39062, "name": "A. Herrera", "number": 15, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/39062.png" } },
+        { "player": { "id": 19740, "name": "P. Diaz", "number": 17, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/19740.png" } },
+        { "player": { "id": 217992, "name": "L. Gonzalez Pirez", "number": 14, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/217992.png" } },
+        { "player": { "id": 11217, "name": "M. Acuna", "number": 21, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/11217.png" } },
+        { "player": { "id": 16288, "name": "M. Meza", "number": 8, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/16288.png" } },
+        { "player": { "id": 23402, "name": "E. Perez", "number": 24, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/23402.png" } },
+        { "player": { "id": 189446, "name": "C. Echeverri", "number": 19, "pos": "M", "grid": "3:3", "photo": "https://media.api-sports.io/football/players/189446.png" } },
+        { "player": { "id": 18522, "name": "I. Fernandez", "number": 26, "pos": "F", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/18522.png" } },
+        { "player": { "id": 84126, "name": "M. Borja", "number": 9, "pos": "F", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/84126.png" } },
+        { "player": { "id": 141381, "name": "F. Colidio", "number": 11, "pos": "F", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/141381.png" } }
+      ],
+      "substitutes": [
+        { "player": { "id": 36572, "name": "A. Sant'Anna", "number": 27, "pos": "D", "grid": null, "photo": "https://media.api-sports.io/football/players/36572.png" } },
+        { "player": { "id": 129650, "name": "P. Solari", "number": 36, "pos": "F", "grid": null, "photo": "https://media.api-sports.io/football/players/129650.png" } },
+        { "player": { "id": 16714, "name": "M. Lanzini", "number": 10, "pos": "M", "grid": null, "photo": "https://media.api-sports.io/football/players/16714.png" } }
+      ],
+      "coach": { "id": 22268, "name": "M. Gallardo", "photo": "https://media.api-sports.io/football/coachs/22268.png" }
+    }
+  ]
+}

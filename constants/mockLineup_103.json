@@ -1,0 +1,36 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "103" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 40,
+        "name": "Liverpool",
+        "logo": "https://media.api-sports.io/football/teams/40.png"
+      },
+      "formation": "4-3-3",
+      "startXI": [
+        { "player": { "id": 2935, "name": "Alisson", "number": 1, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/2935.png" } },
+        { "player": { "id": 2938, "name": "T. Alexander-Arnold", "number": 66, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/2938.png" } },
+        { "player": { "id": 366, "name": "V. van Dijk", "number": 4, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/366.png" } },
+        { "player": { "id": 2936, "name": "I. Konate", "number": 5, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/2936.png" } },
+        { "player": { "id": 1569, "name": "A. Robertson", "number": 26, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/1569.png" } },
+        { "player": { "id": 2934, "name": "A. Mac Allister", "number": 10, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/2934.png" } },
+        { "player": { "id": 127769, "name": "R. Gravenberch", "number": 38, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/127769.png" } },
+        { "player": { "id": 28495, "name": "D. Szoboszlai", "number": 8, "pos": "M", "grid": "3:3", "photo": "https://media.api-sports.io/football/players/28495.png" } },
+        { "player": { "id": 306, "name": "M. Salah", "number": 11, "pos": "F", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/306.png" } },
+        { "player": { "id": 304, "name": "D. Nunez", "number": 9, "pos": "F", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/304.png" } },
+        { "player": { "id": 15928, "name": "L. Diaz", "number": 7, "pos": "F", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/15928.png" } }
+      ],
+      "substitutes": [
+        { "player": { "id": 18911, "name": "C. Gakpo", "number": 18, "pos": "F", "grid": null, "photo": "https://media.api-sports.io/football/players/18911.png" } },
+        { "player": { "id": 127764, "name": "H. Elliott", "number": 19, "pos": "M", "grid": null, "photo": "https://media.api-sports.io/football/players/127764.png" } },
+        { "player": { "id": 18826, "name": "J. Gomez", "number": 2, "pos": "D", "grid": null, "photo": "https://media.api-sports.io/football/players/18826.png" } }
+      ],
+      "coach": { "id": 30167, "name": "A. Slot", "photo": "https://media.api-sports.io/football/coachs/30167.png" }
+    }
+  ]
+}

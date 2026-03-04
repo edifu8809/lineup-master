@@ -1,0 +1,36 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "105" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 1133,
+        "name": "Millonarios",
+        "logo": "https://media.api-sports.io/football/teams/1133.png"
+      },
+      "formation": "4-2-3-1",
+      "startXI": [
+        { "player": { "id": 46526, "name": "Álvaro Montero", "number": 31, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/46526.png" } },
+        { "player": { "id": 247926, "name": "Delvin Alfonzo", "number": 13, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/247926.png" } },
+        { "player": { "id": 46601, "name": "Juan Pablo Vargas", "number": 4, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/46601.png" } },
+        { "player": { "id": 154563, "name": "Andrés Llinás", "number": 26, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/154563.png" } },
+        { "player": { "id": 46540, "name": "Danovis Banguero", "number": 20, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/46540.png" } },
+        { "player": { "id": 46534, "name": "Daniel Giraldo", "number": 8, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/46534.png" } },
+        { "player": { "id": 46528, "name": "Stiven Vega", "number": 5, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/46528.png" } },
+        { "player": { "id": 202941, "name": "Daniel Ruiz", "number": 18, "pos": "M", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/202941.png" } },
+        { "player": { "id": 46535, "name": "Mackalister Silva", "number": 14, "pos": "M", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/46535.png" } },
+        { "player": { "id": 154571, "name": "Jhon Córdoba", "number": 11, "pos": "M", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/154571.png" } },
+        { "player": { "id": 890, "name": "Radamel Falcao", "number": 9, "pos": "F", "grid": "5:1", "photo": "https://media.api-sports.io/football/players/890.png" } }
+      ],
+      "substitutes": [],
+      "coach": {
+        "id": 52288,
+        "name": "Alberto Gamero",
+        "photo": "https://media.api-sports.io/football/coachs/52288.png"
+      }
+    }
+  ]
+}

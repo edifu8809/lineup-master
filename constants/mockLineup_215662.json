@@ -1,0 +1,32 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "215662" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 541,
+        "name": "Real Madrid",
+        "logo": "https://media.api-sports.io/football/teams/541.png"
+      },
+      "formation": "4-3-3",
+      "startXI": [
+        { "player": { "id": 1, "name": "T. Courtois", "number": 1, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/886.png" } },
+        { "player": { "id": 2, "name": "D. Carvajal", "number": 2, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/520.png" } },
+        { "player": { "id": 3, "name": "A. Rudiger", "number": 22, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/1823.png" } },
+        { "player": { "id": 4, "name": "E. Militao", "number": 3, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/1816.png" } },
+        { "player": { "id": 5, "name": "F. Mendy", "number": 23, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/1906.png" } },
+        { "player": { "id": 6, "name": "F. Valverde", "number": 8, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/2325.png" } },
+        { "player": { "id": 7, "name": "A. Tchouameni", "number": 18, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/113286.png" } },
+        { "player": { "id": 8, "name": "J. Bellingham", "number": 5, "pos": "M", "grid": "3:3", "photo": "https://media.api-sports.io/football/players/136031.png" } },
+        { "player": { "id": 9, "name": "Rodrygo", "number": 11, "pos": "F", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/139677.png" } },
+        { "player": { "id": 10, "name": "Vini Jr", "number": 7, "pos": "F", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/19826.png" } },
+        { "player": { "id": 11, "name": "Joselu", "number": 14, "pos": "F", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/1904.png" } }
+      ],
+      "substitutes": [],
+      "coach": { "id": 1, "name": "Carlo Ancelotti", "photo": "https://media.api-sports.io/football/coachs/4.png" }
+    }
+  ]
+}

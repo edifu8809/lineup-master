@@ -1,0 +1,32 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "215663" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 42,
+        "name": "Arsenal",
+        "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "formation": "4-3-3",
+      "startXI": [
+        { "player": { "id": 101, "name": "D. Raya", "number": 22, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/623.png" } },
+        { "player": { "id": 102, "name": "B. White", "number": 4, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/1716.png" } },
+        { "player": { "id": 103, "name": "W. Saliba", "number": 2, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/2283.png" } },
+        { "player": { "id": 104, "name": "Gabriel", "number": 6, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/1443.png" } },
+        { "player": { "id": 105, "name": "O. Zinchenko", "number": 35, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/1469.png" } },
+        { "player": { "id": 106, "name": "D. Rice", "number": 41, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/1103.png" } },
+        { "player": { "id": 107, "name": "M. Odegaard", "number": 8, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/609.png" } },
+        { "player": { "id": 108, "name": "K. Havertz", "number": 29, "pos": "M", "grid": "3:3", "photo": "https://media.api-sports.io/football/players/1579.png" } },
+        { "player": { "id": 109, "name": "B. Saka", "number": 7, "pos": "F", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/1460.png" } },
+        { "player": { "id": 110, "name": "G. Jesus", "number": 9, "pos": "F", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/304.png" } },
+        { "player": { "id": 111, "name": "G. Martinelli", "number": 11, "pos": "F", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/1432.png" } }
+      ],
+      "substitutes": [],
+      "coach": { "id": 2, "name": "Mikel Arteta", "photo": "https://media.api-sports.io/football/coachs/2292.png" }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "102" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 2392,
+        "name": "Atletico Nacional",
+        "logo": "https://media.api-sports.io/football/teams/2392.png"
+      },
+      "formation": "4-3-3",
+      "startXI": [
+        { "player": { "id": 31271, "name": "H. Castillo", "number": 1, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/31271.png" } },
+        { "player": { "id": 176245, "name": "A. Roman", "number": 6, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/176245.png" } },
+        { "player": { "id": 122531, "name": "J. Arias", "number": 23, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/122531.png" } },
+        { "player": { "id": 223145, "name": "C. Zapata", "number": 2, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/223145.png" } },
+        { "player": { "id": 154884, "name": "A. Salazar", "number": 30, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/154884.png" } },
+        { "player": { "id": 29874, "name": "E. Cardona", "number": 10, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/29874.png" } },
+        { "player": { "id": 203754, "name": "J. Campuzano", "number": 21, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/203754.png" } },
+        { "player": { "id": 188234, "name": "N. Palacio", "number": 17, "pos": "M", "grid": "3:3", "photo": "https://media.api-sports.io/football/players/188234.png" } },
+        { "player": { "id": 116021, "name": "M. Morelos", "number": 9, "pos": "F", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/116021.png" } },
+        { "player": { "id": 214223, "name": "D. Pabon", "number": 8, "pos": "F", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/214223.png" } },
+        { "player": { "id": 288901, "name": "A. Sarmiento", "number": 29, "pos": "F", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/288901.png" } }
+      ],
+      "substitutes": [
+        { "player": { "id": 180443, "name": "J. Duque", "number": 13, "pos": "G", "grid": null, "photo": "https://media.api-sports.io/football/players/180443.png" } },
+        { "player": { "id": 245889, "name": "B. Aguirre", "number": 11, "pos": "F", "grid": null, "photo": "https://media.api-sports.io/football/players/245889.png" } },
+        { "player": { "id": 194771, "name": "J. Solis", "number": 28, "pos": "M", "grid": null, "photo": "https://media.api-sports.io/football/players/194771.png" } }
+      ],
+      "coach": { "id": 30584, "name": "P. Repetto", "photo": "https://media.api-sports.io/football/coachs/30584.png" }
+    }
+  ]
+}

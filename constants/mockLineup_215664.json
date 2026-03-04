@@ -1,0 +1,32 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": { "fixture": "215664" },
+  "errors": [],
+  "results": 1,
+  "paging": { "current": 1, "total": 1 },
+  "response": [
+    {
+      "team": {
+        "id": 50,
+        "name": "Manchester City",
+        "logo": "https://media.api-sports.io/football/teams/50.png"
+      },
+      "formation": "4-2-3-1",
+      "startXI": [
+        { "player": { "id": 201, "name": "Ederson", "number": 31, "pos": "G", "grid": "1:1", "photo": "https://media.api-sports.io/football/players/645.png" } },
+        { "player": { "id": 202, "name": "K. Walker", "number": 2, "pos": "D", "grid": "2:1", "photo": "https://media.api-sports.io/football/players/381.png" } },
+        { "player": { "id": 203, "name": "R. Dias", "number": 3, "pos": "D", "grid": "2:2", "photo": "https://media.api-sports.io/football/players/1022.png" } },
+        { "player": { "id": 204, "name": "J. Gvardiol", "number": 24, "pos": "D", "grid": "2:3", "photo": "https://media.api-sports.io/football/players/146236.png" } },
+        { "player": { "id": 205, "name": "N. Ake", "number": 6, "pos": "D", "grid": "2:4", "photo": "https://media.api-sports.io/football/players/1900.png" } },
+        { "player": { "id": 206, "name": "Rodri", "number": 16, "pos": "M", "grid": "3:1", "photo": "https://media.api-sports.io/football/players/1044.png" } },
+        { "player": { "id": 207, "name": "K. De Bruyne", "number": 17, "pos": "M", "grid": "3:2", "photo": "https://media.api-sports.io/football/players/283.png" } },
+        { "player": { "id": 208, "name": "P. Foden", "number": 47, "pos": "M", "grid": "3:3", "photo": "https://media.api-sports.io/football/players/274.png" } },
+        { "player": { "id": 209, "name": "B. Silva", "number": 20, "pos": "M", "grid": "4:1", "photo": "https://media.api-sports.io/football/players/519.png" } },
+        { "player": { "id": 210, "name": "J. Doku", "number": 11, "pos": "M", "grid": "4:2", "photo": "https://media.api-sports.io/football/players/181081.png" } },
+        { "player": { "id": 211, "name": "E. Haaland", "number": 9, "pos": "F", "grid": "4:3", "photo": "https://media.api-sports.io/football/players/1100.png" } }
+      ],
+      "substitutes": [],
+      "coach": { "id": 3, "name": "Pep Guardiola", "photo": "https://media.api-sports.io/football/coachs/4.png" }
+    }
+  ]
+}
