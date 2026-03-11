@@ -27,7 +27,9 @@
       ],
       "substitutes": [
         { "player": { "id": 36572, "name": "A. Sant'Anna", "number": 27, "pos": "D", "grid": null, "photo": "https://media.api-sports.io/football/players/36572.png" } },
-        { "player": { "id": 129650, "name": "P. Solari", "number": 36, "pos": "F", "grid": null, "photo": "https://media.api-sports.io/football/players/129650.png" } },
+        { "player": { "id": 1293650, "name": "P. Solari", "number": 36, "pos": "F", "grid": null, "photo": "https://media.api-sports.io/football/players/129650.png" } },
+         { "player": { "id": 1291650, "name": "P. Solari", "number": 36, "pos": "F", "grid": null, "photo": "https://media.api-sports.io/football/players/129650.png" } },
+          { "player": { "id": 1296250, "name": "P. Solari", "number": 36, "pos": "F", "grid": null, "photo": "https://media.api-sports.io/football/players/129650.png" } },
         { "player": { "id": 16714, "name": "M. Lanzini", "number": 10, "pos": "M", "grid": null, "photo": "https://media.api-sports.io/football/players/16714.png" } }
       ],
       "coach": { "id": 22268, "name": "M. Gallardo", "photo": "https://media.api-sports.io/football/coachs/22268.png" }

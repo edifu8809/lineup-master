@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { memo, useEffect, useState } from 'react';
+import { Image, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Easing,
@@ -11,8 +11,10 @@ import Animated, {
 } from 'react-native-reanimated';
 
 type PlayerIconProps = {
+  playerId: number | string;
   label: string;
   position?: string;
+  orientation?: 'vertical' | 'horizontal';
   x?: number;
   y?: number;
   coordinates?: {
@@ -24,14 +26,28 @@ type PlayerIconProps = {
   rating?: number;
   boundsWidth?: number;
   boundsHeight?: number;
+  onPositionChange?: (playerId: number | string, coordinates: { top: string; left: string }) => void;
+  onPositionDrag?: (playerId: number | string, coordinates: { top: string; left: string }) => void;
+  onDragStateChange?: (playerId: number | string, isDragging: boolean) => void;
   draggableEnabled?: boolean;
+  minimal?: boolean;
+  ghostOpacity?: number;
+  forceAccentColor?: string;
+  hidePhoto?: boolean;
+  dashedBorder?: boolean;
+  minimalMarkerText?: string;
+  showLabelWhenMinimal?: boolean;
+  showMinimalMarker?: boolean;
+  isRival?: boolean;
 };
 
 const ROLE_OPTIONS = ['Poacher', 'False 9', 'Deep Lying Maker'] as const;
 
-export default function PlayerIcon({
+function PlayerIcon({
+  playerId,
   label,
   position,
+  orientation = 'vertical',
   x,
   y,
   coordinates,
@@ -40,10 +56,22 @@ export default function PlayerIcon({
   rating,
   boundsWidth,
   boundsHeight,
+  onPositionChange,
+  onPositionDrag,
+  onDragStateChange,
   draggableEnabled = true,
+  minimal = false,
+  ghostOpacity,
+  forceAccentColor,
+  hidePhoto = false,
+  dashedBorder = false,
+  minimalMarkerText,
+  showLabelWhenMinimal = false,
+  showMinimalMarker = true,
+  isRival = false,
 }: PlayerIconProps) {
-  const size = 44;
-  const innerSize = 38;
+  const size = minimal ? 30 : 44;
+  const innerSize = minimal ? 24 : 38;
   const clampedEnergy = Math.max(0, Math.min(1, energy));
   const normalizedPosition = (position || 'M').toUpperCase();
   const normalizedRating =
@@ -59,7 +87,16 @@ export default function PlayerIcon({
     F: '#EF4444',
   };
 
-  const accentColor = positionAccentMap[normalizedPosition] ?? '#4FD1ED';
+  const rivalAccentMap: Record<string, string> = {
+    G: '#3B82F6',
+    D: '#3B82F6',
+    M: '#22C55E',
+    F: '#EF4444',
+  };
+
+  const accentColor = isRival
+    ? rivalAccentMap[normalizedPosition] ?? '#3B82F6'
+    : forceAccentColor ?? positionAccentMap[normalizedPosition] ?? '#4FD1ED';
 
   const ratingBarColor =
     normalizedRating > 7 ? '#22C55E' : normalizedRating >= 6 ? '#FACC15' : '#EF4444';
@@ -78,6 +115,8 @@ export default function PlayerIcon({
     .join('')
     .slice(0, 2)
     .toUpperCase();
+  const compactRoleText = normalizedPosition.charAt(0) || 'M';
+  const compactMarkerText = (minimalMarkerText || compactRoleText).slice(0, 2).toUpperCase();
   const topPercent = coordinates?.top ? Number.parseFloat(coordinates.top) : undefined;
   const leftPercent = coordinates?.left ? Number.parseFloat(coordinates.left) : undefined;
 
@@ -96,6 +135,7 @@ export default function PlayerIcon({
       : 0;
 
   const [dragPosition, setDragPosition] = useState({ x: resolvedX, y: resolvedY });
+  const [isDragging, setIsDragging] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [role, setRole] = useState<(typeof ROLE_OPTIONS)[number]>('Poacher');
 
@@ -117,10 +157,24 @@ export default function PlayerIcon({
 
   const maxX = boundsWidth ?? Number.MAX_SAFE_INTEGER;
   const maxY = boundsHeight ?? Number.MAX_SAFE_INTEGER;
+  const webNoSelectStyle =
+    Platform.OS === 'web'
+      ? ({
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none',
+        } as any)
+      : null;
+  const webDraggableFalseProps = Platform.OS === 'web' ? ({ draggable: false } as any) : undefined;
 
   const panGesture = Gesture.Pan()
     .enabled(!menuVisible && draggableEnabled)
     .onStart(() => {
+      if (onDragStateChange) {
+        runOnJS(onDragStateChange)(playerId, true);
+      }
+      runOnJS(setIsDragging)(true);
       scale.value = withSpring(1.06, { damping: 12, stiffness: 180 });
     })
     .onUpdate((event) => {
@@ -132,16 +186,43 @@ export default function PlayerIcon({
 
       translateX.value = boundedX;
       translateY.value = boundedY;
+
+      if (onPositionDrag && typeof boundsWidth === 'number' && typeof boundsHeight === 'number') {
+        const topPercent = Math.max(0, Math.min(100, (boundedY / boundsHeight) * 100));
+        const leftPercent = Math.max(0, Math.min(100, (boundedX / boundsWidth) * 100));
+        runOnJS(onPositionDrag)(playerId, {
+          top: `${topPercent.toFixed(2)}%`,
+          left: `${leftPercent.toFixed(2)}%`,
+        });
+      }
     })
     .onEnd(() => {
       scale.value = withSpring(1, { damping: 10, stiffness: 220 });
       translateX.value = withSpring(translateX.value, { damping: 14, stiffness: 180 });
       translateY.value = withSpring(translateY.value, { damping: 14, stiffness: 180 });
+      runOnJS(setIsDragging)(false);
       runOnJS(setDragPosition)({ x: translateX.value, y: translateY.value });
+      if (onPositionChange && typeof boundsWidth === 'number' && typeof boundsHeight === 'number') {
+        const topPercent = Math.max(0, Math.min(100, (translateY.value / boundsHeight) * 100));
+        const leftPercent = Math.max(0, Math.min(100, (translateX.value / boundsWidth) * 100));
+        runOnJS(onPositionChange)(playerId, {
+          top: `${topPercent.toFixed(2)}%`,
+          left: `${leftPercent.toFixed(2)}%`,
+        });
+      }
+      if (onDragStateChange) {
+        runOnJS(onDragStateChange)(playerId, false);
+      }
+    })
+    .onFinalize(() => {
+      runOnJS(setIsDragging)(false);
+      if (onDragStateChange) {
+        runOnJS(onDragStateChange)(playerId, false);
+      }
     });
 
   const longPressGesture = Gesture.LongPress()
-    .enabled(!menuVisible)
+    .enabled(!menuVisible && draggableEnabled)
     .minDuration(350)
     .onStart(() => {
       runOnJS(setMenuVisible)(true);
@@ -160,7 +241,20 @@ export default function PlayerIcon({
   return (
     <>
       <GestureDetector gesture={iconGesture}>
-        <Animated.View style={[styles.container, { width: size }, animatedStyle]}>
+        <Animated.View
+          style={[
+            styles.container,
+            {
+              width: size,
+              opacity: typeof ghostOpacity === 'number' ? ghostOpacity : 1,
+              zIndex: isDragging ? 90 : draggableEnabled ? 40 : 10,
+              elevation: isDragging ? 16 : draggableEnabled ? 8 : 2,
+            },
+            animatedStyle,
+          ]}
+          pointerEvents={draggableEnabled ? 'auto' : 'none'}
+          {...webDraggableFalseProps}
+        >
           <View
             style={[
               styles.avatarRing,
@@ -169,52 +263,86 @@ export default function PlayerIcon({
                 height: size,
                 borderRadius: size / 2,
                 borderColor: accentColor,
-                boxShadow: [
-                  {
-                    offsetX: 0,
-                    offsetY: 0,
-                    blurRadius: 10,
-                    spreadDistance: 0,
-                    color: toRgba(accentColor, 0.45),
-                  },
-                ],
+                borderStyle: dashedBorder ? 'dashed' : 'solid',
+                ...(minimal && hidePhoto
+                  ? {}
+                  : {
+                      boxShadow: [
+                        {
+                          offsetX: 0,
+                          offsetY: 0,
+                          blurRadius: 10,
+                          spreadDistance: 0,
+                          color: toRgba(accentColor, 0.45),
+                        },
+                      ],
+                    }),
               },
             ]}
           >
             <View style={[styles.avatarClip, { width: innerSize, height: innerSize, borderRadius: innerSize / 2 }]}>
-              {photoUrl ? (
-                <Image source={{ uri: photoUrl }} style={styles.avatarImage} />
+              {minimal && hidePhoto ? (
+                <View style={[styles.minimalSolidDot, styles.minimalMarkerDot, { backgroundColor: accentColor }]}> 
+                  {showMinimalMarker ? (
+                    <Text
+                      style={[styles.minimalMarkerText, isRival ? styles.minimalMarkerTextRival : null, webNoSelectStyle]}
+                      selectable={false}
+                      {...webDraggableFalseProps}
+                    >
+                      {compactMarkerText}
+                    </Text>
+                  ) : null}
+                </View>
+              ) : !hidePhoto && photoUrl ? (
+                <Image source={{ uri: photoUrl }} style={styles.avatarImage} {...webDraggableFalseProps} />
               ) : (
                 <View style={styles.initialsFallback}>
-                  <Text style={styles.initialsText}>{initials}</Text>
+                  <Text style={[styles.initialsText, webNoSelectStyle]} selectable={false} {...webDraggableFalseProps}>{initials}</Text>
                 </View>
               )}
             </View>
           </View>
 
-          <View style={styles.energyRow}>
-            <View style={styles.energyTrack}>
-              <View style={[styles.energyFill, { width: `${clampedEnergy * 100}%`, backgroundColor: ratingBarColor }]} />
-            </View>
-            <Text style={[styles.ratingText, { color: ratingBarColor }]}>{ratingText}</Text>
-          </View>
+          {!minimal ? (
+            <>
+              <View style={styles.energyRow}>
+                <View style={styles.energyTrack}>
+                  <View style={[styles.energyFill, { width: `${clampedEnergy * 100}%`, backgroundColor: ratingBarColor }]} />
+                </View>
+                <Text style={[styles.ratingText, { color: ratingBarColor }, webNoSelectStyle]} selectable={false} {...webDraggableFalseProps}>{ratingText}</Text>
+              </View>
 
-          <Text style={styles.playerName} numberOfLines={1}>
-            {label}
-          </Text>
-          <Text
-            style={[
-              styles.roleBadge,
-              {
-                backgroundColor: toRgba(accentColor, 0.2),
-                color: accentColor,
-                borderColor: toRgba(accentColor, 0.6),
-              },
-            ]}
-            numberOfLines={1}
-          >
-            {normalizedPosition}
-          </Text>
+              <Text style={[styles.playerName, webNoSelectStyle]} numberOfLines={1} selectable={false} {...webDraggableFalseProps}>
+                {label}
+              </Text>
+              <Text
+                style={[
+                  styles.roleBadge,
+                  {
+                    backgroundColor: toRgba(accentColor, 0.2),
+                    color: accentColor,
+                    borderColor: toRgba(accentColor, 0.6),
+                  },
+                  webNoSelectStyle,
+                  orientation === 'horizontal' ? styles.horizontalReadableText : null,
+                ]}
+                numberOfLines={1}
+                selectable={false}
+                {...webDraggableFalseProps}
+              >
+                {normalizedPosition}
+              </Text>
+            </>
+          ) : showLabelWhenMinimal ? (
+            <Text
+              style={[styles.minimalLabel, isRival ? styles.minimalLabelRival : null, webNoSelectStyle]}
+              numberOfLines={1}
+              selectable={false}
+              {...webDraggableFalseProps}
+            >
+              {label}
+            </Text>
+          ) : null}
         </Animated.View>
       </GestureDetector>
 
@@ -240,6 +368,8 @@ export default function PlayerIcon({
     </>
   );
 }
+
+export default memo(PlayerIcon);
 
 const styles = StyleSheet.create({
   container: {
@@ -273,10 +403,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  minimalSolidDot: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 999,
+  },
+  minimalMarkerDot: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  minimalMarkerText: {
+    color: '#0D1117',
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0.3,
+  },
+  minimalMarkerTextRival: {
+    color: '#F9FAFB',
+    textShadowColor: 'rgba(0, 0, 0, 0.85)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
   initialsText: {
     color: '#E5E7EB',
     fontSize: 12,
     fontWeight: '800',
+  },
+  minimalLabel: {
+    marginTop: 3,
+    color: '#E5E7EB',
+    fontSize: 9,
+    fontWeight: '700',
+    maxWidth: 72,
+    textAlign: 'center',
+  },
+  minimalLabelRival: {
+    color: '#FFFFFF',
+    fontWeight: '800',
+    textShadowColor: 'rgba(0,0,0,0.9)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   energyRow: {
     marginTop: 4,
@@ -320,6 +486,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     overflow: 'hidden',
+  },
+  horizontalReadableText: {
+    transform: [{ rotate: '0deg' }],
   },
   modalBackdrop: {
     flex: 1,

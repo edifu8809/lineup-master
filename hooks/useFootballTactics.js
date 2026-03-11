@@ -161,17 +161,6 @@ const parseGrid = (grid) => {
   };
 };
 
-const hasValidGrid = (grid) => {
-  if (typeof grid !== 'string') return false;
-  const [rowRaw, colRaw] = grid.split(':');
-  const row = Number.parseInt(rowRaw, 10);
-  const col = Number.parseInt(colRaw, 10);
-  return Number.isFinite(row) && Number.isFinite(col) && row > 0 && col > 0;
-};
-
-const hasDirectCoordinates = (coordinates) =>
-  !!coordinates && typeof coordinates.top === 'string' && typeof coordinates.left === 'string';
-
 export const convertToCoordinates = (grid, options = {}) => {
   const { row, col } = parseGrid(grid);
   const maxRows = options.maxRows && options.maxRows > 1 ? options.maxRows : 4;
@@ -186,15 +175,10 @@ export const convertToCoordinates = (grid, options = {}) => {
   };
 };
 
-const normalizeLineup = (lineup, fallbackFormation = '4-4-2') => {
+const normalizeLineup = (lineup) => {
   const players = lineup?.startXI ?? [];
-  const effectiveFormation = lineup?.formation || fallbackFormation || '4-4-2';
-  const formationCoordinates = formationToCoordinates(effectiveFormation);
   const rowStats = players.reduce(
     (acc, item) => {
-      if (!hasValidGrid(item?.player?.grid)) {
-        return acc;
-      }
       const { row, col } = parseGrid(item?.player?.grid);
       acc.maxRows = Math.max(acc.maxRows, row);
       acc.rowMaxMap[row] = Math.max(acc.rowMaxMap[row] || 0, col);
@@ -203,25 +187,13 @@ const normalizeLineup = (lineup, fallbackFormation = '4-4-2') => {
     { maxRows: 1, rowMaxMap: {} }
   );
 
-  const mappedPlayers = players.map((item, index) => {
+  const mappedPlayers = players.map((item) => {
     const player = item?.player ?? {};
     const { row } = parseGrid(player.grid);
     const hasApiRating = player.rating !== null && player.rating !== undefined && player.rating !== '';
     const ratingValue = hasApiRating ? parseRating(player.rating) : randomDemoRating();
     const normalizedEnergy = clamp(ratingValue / 10, 0, 1);
     const directCoordinates = player.coordinates;
-    const gridCoordinates = hasValidGrid(player.grid)
-      ? convertToCoordinates(player.grid, {
-          maxRows: rowStats.maxRows,
-          rowMax: rowStats.rowMaxMap[row] || 4,
-        })
-      : null;
-    const formationCoordinatesByIndex = formationCoordinates[index]
-      ? {
-          top: formationCoordinates[index].top,
-          left: formationCoordinates[index].left,
-        }
-      : null;
 
     return {
       id: player.id,
@@ -233,9 +205,12 @@ const normalizeLineup = (lineup, fallbackFormation = '4-4-2') => {
       rating: Number(ratingValue.toFixed(1)),
       energy: Number(normalizedEnergy.toFixed(2)),
       coordinates:
-        hasDirectCoordinates(directCoordinates)
+        directCoordinates && typeof directCoordinates.top === 'string' && typeof directCoordinates.left === 'string'
           ? directCoordinates
-          : gridCoordinates || formationCoordinatesByIndex || formationToCoordinates(fallbackFormation || '4-4-2')[index],
+          : convertToCoordinates(player.grid, {
+              maxRows: rowStats.maxRows,
+              rowMax: rowStats.rowMaxMap[row] || 4,
+            }),
     };
   });
 
@@ -272,7 +247,6 @@ export default function useFootballTactics({ fixtureId, developmentMode = DEVELO
 
       setLoading(true);
       setError(null);
-      setData(null);
 
       const apiKey = process.env.EXPO_PUBLIC_FOOTBALL_API_KEY;
       console.log('[useFootballTactics] fixtureId:', fixtureId);
@@ -330,9 +304,7 @@ export default function useFootballTactics({ fixtureId, developmentMode = DEVELO
           ? payload
           : buildFormationFallbackPayload(fixtureId || 'generic', defaultFormation || '4-4-2');
 
-      const normalized = (effectivePayload?.response ?? []).map((lineup) =>
-        normalizeLineup(lineup, defaultFormation || '4-4-2')
-      );
+      const normalized = (effectivePayload?.response ?? []).map(normalizeLineup);
       setData({
         raw: effectivePayload,
         lineups: normalized,
