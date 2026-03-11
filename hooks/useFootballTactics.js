@@ -214,6 +214,25 @@ const normalizeLineup = (lineup) => {
     };
   });
 
+  const substitutes = lineup?.substitutes ?? [];
+  const mappedSubstitutes = substitutes.map((item, index) => {
+    const player = item?.player ?? item ?? {};
+    const hasApiRating = player.rating !== null && player.rating !== undefined && player.rating !== '';
+    const ratingValue = hasApiRating ? parseRating(player.rating) : randomDemoRating();
+    const normalizedEnergy = clamp(ratingValue / 10, 0, 1);
+
+    return {
+      id: player.id ?? `sub-${index}`,
+      name: player.name ?? `Substitute ${index + 1}`,
+      number: player.number,
+      pos: player.pos,
+      grid: player.grid,
+      photo: player.photo,
+      rating: Number(ratingValue.toFixed(1)),
+      energy: Number(normalizedEnergy.toFixed(2)),
+    };
+  });
+
   const normalizedLineup = {
     team: {
       ...lineup?.team,
@@ -222,7 +241,8 @@ const normalizeLineup = (lineup) => {
     formation: lineup?.formation,
     coach: lineup?.coach,
     players: mappedPlayers,
-    substitutes: lineup?.substitutes ?? [],
+    substitutes: mappedSubstitutes,
+    benchPlayers: mappedSubstitutes,
   };
 
   console.log('🧭 Normalización completada:', {

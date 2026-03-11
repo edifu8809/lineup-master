@@ -377,7 +377,7 @@ export default function BoardScreen() {
   const [compareWithRival, setCompareWithRival] = useState(false);
   const [showRivalNames, setShowRivalNames] = useState(false);
   const [isAutoTracking, setIsAutoTracking] = useState(true);
-  const [rivalTrackingOffsets, setRivalTrackingOffsets] = useState<Record<string, { x: number; y: number }>>({});
+  const [trackingRenderVersion, setTrackingRenderVersion] = useState(0);
   const [activeTrackingLine, setActiveTrackingLine] = useState<{
     teamPlayerId: string;
     rivalPlayerId: string;
@@ -388,6 +388,8 @@ export default function BoardScreen() {
   } | null>(null);
   const dragAnchorRef = useRef<Record<string, { x: number; y: number }>>({});
   const activeMatchByTeamRef = useRef<Record<string, string | undefined>>({});
+  const rivalTrackingOffsetsRef = useRef<Record<string, { x: number; y: number }>>({});
+  const lastTrackingCommitAtRef = useRef(0);
   const [teamsList, setTeamsList] = useState<TeamDatabaseItem[]>(() => TEAMS_BY_LEAGUE[DEFAULT_LEAGUE_FILTER] ?? []);
   const [cachedLeagues, setCachedLeagues] = useState<Partial<Record<LeagueKey, TeamDatabaseItem[]>>>(() => ({
     [DEFAULT_LEAGUE_FILTER]: TEAMS_BY_LEAGUE[DEFAULT_LEAGUE_FILTER],
@@ -649,6 +651,14 @@ export default function BoardScreen() {
           rating?: number;
           energy?: number;
         }>;
+        substitutes?: Array<{
+          id: number | string;
+          name: string;
+          pos?: string;
+          photo?: string;
+          rating?: number;
+          energy?: number;
+        }>;
       }>;
     } | null;
     loading: boolean;
@@ -675,7 +685,10 @@ export default function BoardScreen() {
     [data]
   );
   const lineupBenchPlayers = useMemo(
-    () => (data?.lineups?.[0]?.benchPlayers ?? []) as BenchPlayer[],
+    () => {
+      const lineup = data?.lineups?.[0];
+      return ((lineup?.benchPlayers ?? lineup?.substitutes ?? []) as BenchPlayer[]) ?? [];
+    },
     [data]
   );
   const rivalLineupPlayers = useMemo(
@@ -975,7 +988,7 @@ export default function BoardScreen() {
           return player;
         }
 
-        const offset = rivalTrackingOffsets[key];
+        const offset = rivalTrackingOffsetsRef.current[key];
         const nextX = basePoint.x + (offset?.x ?? 0);
         const nextY = basePoint.y + (offset?.y ?? 0);
 
@@ -990,13 +1003,24 @@ export default function BoardScreen() {
           },
         };
       }),
-    [pitchHeight, pitchWidth, rivalBasePositionById, rivalOverlayPlayers, rivalTrackingOffsets]
+    [pitchHeight, pitchWidth, rivalBasePositionById, rivalOverlayPlayers, trackingRenderVersion]
   );
+
+  const commitTrackingVisualUpdate = useCallback((force = false) => {
+    const now = Date.now();
+    if (!force && now - lastTrackingCommitAtRef.current < 16) {
+      return;
+    }
+
+    lastTrackingCommitAtRef.current = now;
+    setTrackingRenderVersion((previous) => previous + 1);
+  }, []);
 
   const handlePlayerDragStateChange = useCallback(
     (playerId: number | string, isDragging: boolean) => {
       const teamKey = String(playerId);
       if (!isDragging) {
+        commitTrackingVisualUpdate(true);
         delete dragAnchorRef.current[teamKey];
         delete activeMatchByTeamRef.current[teamKey];
         setActiveTrackingLine((previous) => (previous?.teamPlayerId === teamKey ? null : previous));
@@ -1013,7 +1037,7 @@ export default function BoardScreen() {
         y: (percentToNumber(player.coordinates.top) / 100) * pitchHeight,
       };
     },
-    [orientedPlayers, pitchHeight, pitchWidth]
+    [commitTrackingVisualUpdate, orientedPlayers, pitchHeight, pitchWidth]
   );
 
   const handlePlayerPositionDrag = useCallback(
@@ -1032,6 +1056,11 @@ export default function BoardScreen() {
       dragAnchorRef.current[teamKey] = { x: nextX, y: nextY };
 
       if (Math.abs(deltaX) < 0.01 && Math.abs(deltaY) < 0.01) {
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastTrackingCommitAtRef.current < 16) {
         return;
       }
 
@@ -1056,11 +1085,10 @@ export default function BoardScreen() {
 
       if (!nearestId || nearestDistance > trackingLimit) {
         if (previouslyMatched) {
-          setRivalTrackingOffsets((previous) => {
-            const next = { ...previous };
-            delete next[previouslyMatched];
-            return next;
-          });
+          const nextOffsets = { ...rivalTrackingOffsetsRef.current };
+          delete nextOffsets[previouslyMatched];
+          rivalTrackingOffsetsRef.current = nextOffsets;
+          commitTrackingVisualUpdate();
         }
         delete activeMatchByTeamRef.current[teamKey];
         setActiveTrackingLine((previous) => (previous?.teamPlayerId === teamKey ? null : previous));
@@ -1068,14 +1096,13 @@ export default function BoardScreen() {
       }
 
       if (previouslyMatched && previouslyMatched !== nearestId) {
-        setRivalTrackingOffsets((previous) => {
-          const next = { ...previous };
-          delete next[previouslyMatched];
-          return next;
-        });
+        const nextOffsets = { ...rivalTrackingOffsetsRef.current };
+        delete nextOffsets[previouslyMatched];
+        rivalTrackingOffsetsRef.current = nextOffsets;
       }
 
       activeMatchByTeamRef.current[teamKey] = nearestId;
+      const targetRivalId = nearestId;
 
       const followFactor = 0.3;
       const basePoint = rivalBasePositionById.get(nearestId);
@@ -1083,34 +1110,53 @@ export default function BoardScreen() {
         return;
       }
 
-      setRivalTrackingOffsets((previous) => {
-        const currentOffset = previous[nearestId!] ?? { x: 0, y: 0 };
-        const nextOffsetX = currentOffset.x + deltaX * followFactor;
-        const nextOffsetY = currentOffset.y + deltaY * followFactor;
+      const currentOffset = rivalTrackingOffsetsRef.current[nearestId] ?? { x: 0, y: 0 };
+      const nextOffsetX = currentOffset.x + deltaX * followFactor;
+      const nextOffsetY = currentOffset.y + deltaY * followFactor;
 
-        const boundedX = Math.max(-basePoint.x, Math.min(pitchWidth - basePoint.x, nextOffsetX));
-        const boundedY = Math.max(-basePoint.y, Math.min(pitchHeight - basePoint.y, nextOffsetY));
+      const boundedX = Math.max(-basePoint.x, Math.min(pitchWidth - basePoint.x, nextOffsetX));
+      const boundedY = Math.max(-basePoint.y, Math.min(pitchHeight - basePoint.y, nextOffsetY));
 
-        return {
-          ...previous,
-          [nearestId!]: {
+      const hasSignificantOffsetChange =
+        Math.abs(boundedX - currentOffset.x) > 0.85 || Math.abs(boundedY - currentOffset.y) > 0.85;
+
+      if (hasSignificantOffsetChange) {
+        rivalTrackingOffsetsRef.current = {
+          ...rivalTrackingOffsetsRef.current,
+          [nearestId]: {
             x: boundedX,
             y: boundedY,
           },
         };
-      });
+        commitTrackingVisualUpdate();
+      }
 
-      const currentOffset = rivalTrackingOffsets[nearestId] ?? { x: 0, y: 0 };
-      setActiveTrackingLine({
-        teamPlayerId: teamKey,
-        rivalPlayerId: nearestId,
-        x1: nextX,
-        y1: nextY,
-        x2: basePoint.x + currentOffset.x + deltaX * followFactor,
-        y2: basePoint.y + currentOffset.y + deltaY * followFactor,
+      setActiveTrackingLine((previous) => {
+        const targetLine = {
+          teamPlayerId: teamKey,
+          rivalPlayerId: targetRivalId,
+          x1: nextX,
+          y1: nextY,
+          x2: basePoint.x + boundedX,
+          y2: basePoint.y + boundedY,
+        };
+
+        if (!previous || previous.teamPlayerId !== teamKey || previous.rivalPlayerId !== targetRivalId) {
+          return targetLine;
+        }
+
+        const alpha = 0.35;
+        return {
+          ...targetLine,
+          x1: previous.x1 + (targetLine.x1 - previous.x1) * alpha,
+          y1: previous.y1 + (targetLine.y1 - previous.y1) * alpha,
+          x2: previous.x2 + (targetLine.x2 - previous.x2) * alpha,
+          y2: previous.y2 + (targetLine.y2 - previous.y2) * alpha,
+        };
       });
     },
     [
+      commitTrackingVisualUpdate,
       compareWithRival,
       isAutoTracking,
       isCompareMode,
@@ -1120,13 +1166,13 @@ export default function BoardScreen() {
       rivalLoading,
       rivalTeam,
       rivalTrackedOverlayPlayers,
-      rivalTrackingOffsets,
     ]
   );
 
   useEffect(() => {
     if (!isCompareMode || !compareWithRival || !isAutoTracking) {
-      setRivalTrackingOffsets({});
+      rivalTrackingOffsetsRef.current = {};
+      setTrackingRenderVersion((previous) => previous + 1);
       setActiveTrackingLine(null);
       activeMatchByTeamRef.current = {};
       dragAnchorRef.current = {};
@@ -1134,7 +1180,8 @@ export default function BoardScreen() {
   }, [compareWithRival, isAutoTracking, isCompareMode]);
 
   useEffect(() => {
-    setRivalTrackingOffsets({});
+    rivalTrackingOffsetsRef.current = {};
+    setTrackingRenderVersion((previous) => previous + 1);
     setActiveTrackingLine(null);
     activeMatchByTeamRef.current = {};
     dragAnchorRef.current = {};
